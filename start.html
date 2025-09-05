@@ -323,7 +323,6 @@
         <div class="result" id="result"></div>
     </div>
 
-    <script src="assets/js/app.js"></script>
     <script>
         // Симуляция загрузки
         window.addEventListener('load', function() {
@@ -359,18 +358,19 @@
             });
         });
 
-        // Если функция selectTactic не определена в app.js, создаем базовую
-        if (typeof selectTactic === 'undefined') {
-            function selectTactic(tactic) {
-                const result = document.getElementById('result');
-                result.textContent = `Выбрана: ${tactic}`;
-                result.classList.add('show');
-                
-                // Переход на страницу тактики через небольшую задержку
-                setTimeout(() => {
-                    window.location.href = 'tactic.html';
-                }, 1000);
-            }
+        // Основная функция выбора тактики
+        function selectTactic(tactic) {
+            const result = document.getElementById('result');
+            result.textContent = `Выбрана: ${tactic}`;
+            result.classList.add('show');
+            
+            // Сохраняем выбранную тактику
+            localStorage.setItem('selectedTactic', tactic);
+            
+            // Переход на страницу тактики через небольшую задержку
+            setTimeout(() => {
+                window.location.href = 'tactic.html';
+            }, 1000);
         }
     </script>
 </body>
