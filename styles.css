@@ -1,0 +1,673 @@
+/* Импорт шрифтов */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Сброс стилей */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Переменные цветов */
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --success-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    --danger-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    
+    --red-roulette: linear-gradient(135deg, #ff0844, #c7003d);
+    --black-roulette: linear-gradient(135deg, #2a2a2a, #0a0a0a);
+    --green-roulette: linear-gradient(135deg, #00d26a, #00a854);
+    
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --dark-glass: rgba(0, 0, 0, 0.1);
+    
+    --shadow-small: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.15);
+    --shadow-large: 0 16px 64px rgba(0, 0, 0, 0.2);
+    
+    --border-radius: 24px;
+    --border-radius-small: 16px;
+    --border-radius-large: 32px;
+    
+    --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-medium: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Основные стили */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #0a0e1a;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+    color: white;
+}
+
+/* Анимированный фон */
+.background-effects {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: float 8s ease-in-out infinite;
+}
+
+.orb-1 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.4) 0%, transparent 70%);
+    top: -200px;
+    left: -200px;
+    animation-delay: 0s;
+}
+
+.orb-2 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(240, 147, 251, 0.3) 0%, transparent 70%);
+    top: 50%;
+    right: -150px;
+    animation-delay: -3s;
+}
+
+.orb-3 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(79, 172, 254, 0.2) 0%, transparent 70%);
+    bottom: -250px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation-delay: -6s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+    }
+}
+
+.floating-shapes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.shape {
+    position: absolute;
+    opacity: 0.1;
+    animation: drift 15s linear infinite;
+}
+
+.shape-1 {
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    width: 15px;
+    height: 15px;
+    background: white;
+    border-radius: 50%;
+    top: 60%;
+    right: 20%;
+    animation-delay: -5s;
+}
+
+.shape-3 {
+    width: 25px;
+    height: 25px;
+    background: white;
+    border-radius: 50%;
+    bottom: 30%;
+    left: 70%;
+    animation-delay: -10s;
+}
+
+@keyframes drift {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.1;
+    }
+    90% {
+        opacity: 0.1;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Контейнер */
+.container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    z-index: 1;
+}
+
+/* Страницы */
+.page {
+    display: none;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: var(--transition-slow);
+}
+
+.page.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Главная страница */
+.logo {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px 20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--shadow-large);
+    position: relative;
+    overflow: hidden;
+}
+
+.logo::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.logo-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.title {
+    font-size: 32px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    letter-spacing: -1px;
+}
+
+.subtitle {
+    font-size: 16px;
+    opacity: 0.8;
+    font-weight: 400;
+}
+
+/* Сетка тактик */
+.tactics-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.tactic-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    cursor: pointer;
+    transition: var(--transition-medium);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    text-align: left;
+    color: white;
+    box-shadow: var(--shadow-medium);
+    animation: slideInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.tactic-card:nth-child(1) { animation-delay: 0.1s; }
+.tactic-card:nth-child(2) { animation-delay: 0.2s; }
+.tactic-card:nth-child(3) { animation-delay: 0.3s; }
+.tactic-card:nth-child(4) { animation-delay: 0.4s; }
+.tactic-card:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes slideInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tactic-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), transparent);
+    opacity: 0;
+    transition: var(--transition-medium);
+}
+
+.tactic-card:hover::before {
+    opacity: 1;
+}
+
+.tactic-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+    border-color: rgba(102, 126, 234, 0.4);
+}
+
+.tactic-card:active {
+    transform: translateY(-4px) scale(1.01);
+}
+
+.card-icon {
+    font-size: 32px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--glass-bg);
+    border-radius: var(--border-radius-small);
+    border: 1px solid var(--glass-border);
+    flex-shrink: 0;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.card-desc {
+    font-size: 14px;
+    opacity: 0.7;
+    font-weight: 400;
+}
+
+/* Игровая страница */
+.game-page {
+    background: var(--dark-glass);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius-large);
+    padding: 32px;
+    box-shadow: var(--shadow-large);
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.game-title {
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #f97316, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+    animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.2); }
+}
+
+.result-display {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-medium);
+}
+
+.result-display::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s;
+}
+
+.result-display:hover::before {
+    left: 100%;
+}
+
+.result-content {
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Стол рулетки */
+.roulette-table {
+    margin-bottom: 32px;
+}
+
+.numbers-section {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--shadow-medium);
+}
+
+.numbers-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.number-btn {
+    aspect-ratio: 1;
+    border: none;
+    border-radius: var(--border-radius-small);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition-medium);
+    position: relative;
+    overflow: hidden;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    animation: numberAppear 0.4s ease-out forwards;
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+@keyframes numberAppear {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.number-btn.red {
+    background: var(--red-roulette);
+    border: 1px solid rgba(255, 8, 68, 0.3);
+}
+
+.number-btn.red:hover {
+    background: linear-gradient(135deg, #ff3366, #ff0844);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 12px 24px rgba(255, 8, 68, 0.4);
+}
+
+.number-btn.black {
+    background: var(--black-roulette);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.number-btn.black:hover {
+    background: linear-gradient(135deg, #3a3a3a, #1a1a1a);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
+}
+
+.number-btn:active {
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* Секция нулей */
+.zero-section {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.zero-btn {
+    background: var(--green-roulette);
+    border: 1px solid rgba(0, 210, 106, 0.3);
+    width: 80px;
+    height: 48px;
+    aspect-ratio: unset;
+}
+
+.zero-btn:hover {
+    background: linear-gradient(135deg, #00ff88, #00d26a);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 12px 24px rgba(0, 210, 106, 0.4);
+}
+
+.double-zero {
+    font-size: 14px;
+}
+
+/* Эффект выбора */
+.number-btn.selected {
+    animation: selectedPulse 0.4s ease-out;
+}
+
+@keyframes selectedPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+/* Контролы игры */
+.game-controls {
+    display: flex;
+    justify-content: center;
+}
+
+.control-btn {
+    background: linear-gradient(135deg, #f97316, #ec4899);
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 16px 32px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-medium);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow-medium);
+    position: relative;
+    overflow: hidden;
+}
+
+.control-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.control-btn:hover::before {
+    left: 100%;
+}
+
+.control-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(249, 115, 22, 0.4);
+}
+
+.control-btn:active {
+    transform: translateY(-1px);
+}
+
+.btn-icon {
+    font-size: 18px;
+}
+
+.btn-text {
+    font-weight: 600;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .container {
+        max-width: 100%;
+        padding: 0 16px;
+    }
+    
+    .logo {
+        padding: 32px 16px;
+        margin-bottom: 24px;
+    }
+    
+    .title {
+        font-size: 28px;
+    }
+    
+    .logo-icon {
+        font-size: 40px;
+    }
+    
+    .game-page {
+        padding: 24px;
+    }
+    
+    .numbers-grid {
+        gap: 8px;
+    }
+    
+    .number-btn {
+        font-size: 14px;
+    }
+    
+    .zero-btn {
+        width: 70px;
+        height: 40px;
+        font-size: 14px;
+    }
+    
+    .tactic-card {
+        padding: 20px;
+        gap: 16px;
+    }
+    
+    .card-icon {
+        width: 56px;
+        height: 56px;
+        font-size: 28px;
+    }
+    
+    .card-title {
+        font-size: 16px;
+    }
+    
+    .card-desc {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 16px;
+    }
+    
+    .logo {
+        padding: 24px 16px;
+    }
+    
+    .title {
+        font-size: 24px;
+    }
+    
+    .numbers-grid {
+        gap: 6px;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+    
+    .number-btn {
+        font-size: 12px;
+        min-height: 40px;
+    }
+    
+    .zero-btn {
+        width: 60px;
+        height: 36px;
+        font-size: 12px;
+    }
+    
+    .control-btn {
+        padding: 14px 24px;
+        font-size: 14px;
+    }
+}
