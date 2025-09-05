@@ -364,12 +364,12 @@
             result.textContent = `Выбрана: ${tactic}`;
             result.classList.add('show');
             
-            // Сохраняем выбранную тактику
-            localStorage.setItem('selectedTactic', tactic);
+            // Сохраняем выбранную тактику в URL параметр (поскольку localStorage не работает в artifacts)
+            const tacticParam = encodeURIComponent(tactic);
             
-            // Переход на страницу тактики через небольшую задержку
+            // Прямой переход на страницу тактики с параметром
             setTimeout(() => {
-                window.location.href = 'tactic.html';
+                window.location.href = `tactic.html?tactic=${tacticParam}`;
             }, 1000);
         }
     </script>
