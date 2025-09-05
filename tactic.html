@@ -525,16 +525,40 @@
                 height: 40px;
             }
         }
+
+        /* Добавляем небольшие частицы для красоты */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            opacity: 0;
+            animation: particleFloat 8s linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) scale(1);
+            }
+        }
     </style>
 </head>
 
 <body>
     <div class="container_button">
-        <h1 id="tacticName" class="tactic-title">Загрузка...</h1>
-        <div id="resultDisplay" class="result-text">Нажмите на номер для выбора</div>
+        <h1 id="tacticName" class="tactic-title"></h1>
+        <div id="resultDisplay" class="result-text"></div>
         <div class="numbers-grid">
             <div class="grid-main">
-                <!-- Сетка будет создана через JavaScript -->
             </div>
             <div class="grid-special">
                 <button class="numberButton0" data-key="0">0</button>
@@ -547,7 +571,71 @@
         </button>
     </div>
 
+    <script src="assets/js/tactik.js"></script>
     <script>
-        // Данные из numbers.txt
-        const numbersData = [
-            14,12,30,5,36,28,20,12,6,6,32,19,22,2,17,33,25,29,27,30,35,16,34,17,3,20,20,9,33,2,33,28,1,16,0,7,16,22,1,31,4,36,9,19,21,32,33,27,36,10,32,15,18,1,36,25,28,17,2,10,10,17,12,22,15,10,29,36,34,32,3,22,13,5,5,24,14,3,20,31,8,29,36,0,0,1,9,10,4,34,35,6,35,10,34,0,12,7,3,28,0,25,27,34,25,0,3,32,8,36,11,21,34,27,4,34,17,25,29,34,14,15,19,11,4,29,27,11,0,31,6,9,9,0,31,20,6,31,21,8,20,22,0,3,23,28,25,17,16,23,17,12,1,10,33,1,3,34,28,19,33,9,11,6,24,30,11,9,11,13,4,20,17,4,4,15,6,15,4,30,10,31,10,24,19,32,30,1,22,26,0,33,26,27,2,2,19,29,18,16,32,20,23,11,17,15,20,6,5,14,11,0,11,26,35,22,14,0,18,4,29,17,26,16,4,14,20,10,15,8,24,5,12,26,26,2,1,29,22,7,7,19,11,6,9,34,23,13,22,21,26,18,30,35,18,14,9,18,30,1,22,10,32,26,33,0,24,25,0,2,25,13,26,14,31,2,32,8,11,32,14,24,34,11,4,31,34,3,26,35,12,1,26,4,9,16,33,6,0,10,36,9,0,8,9,1,32,11,13,4,8,23,26,27,33,36,14,21,14,12,25,36,7,23,0,34,31,28,23,15,36,18,0,28,12,30,0,7,18,3,8,31,12,18,36,30,22,15,5,23,2,30,10,22,14,26,10,33,25,12,17,20,15,25,29,10,29,22,10,25,33,26,6,5,26,21,28,31,13,18,2,30,22,32,16,29,2,0,22,29,0,28,0,33,22,14,9,21,14,26,10,20,32,16,0,25,22,22,5,10,4,8,23,6,32,9,11,30,34,3,16,13,27,8,23,25,26,30,14,32,32,28,25,36,35,32,13,23,8,35,19,8,23,18,14,18,8,3,23,17,10,9,23,32,5,24,14,9,14,14,7,21,17,22,28,33,33,24,29,27,17,5,34,12,11,1,31,30,13,4,11,16,9,32,13,34,30,19,4,23,33,15,34,13,12,34,14,14,18,25,17,24,31,34,12,31,1,24,1,4,15,30,34,9,27,34,16,34,18,27,11,10,30,28,3,4,18,24,6,35,0,22,28,29,12,11,0,33,29,34,18,0,24,9,21,25,1,12,23,11,11,4,23,18,25,15,13,5,21,30,24,14,35,34,30,17,19,7,16,17,16,0,28,14,28,35,15,22,24,20,7,26,0,0,2,14,12,3,27,21,18,25,28,14,10,14,10,9,33,31,18,1,15,32,18,27,6,19,29,27,17,11,1,0,1,12,8,19,35,19,29,1,31,10,20,24,19,34,27,3,16,0,33,11,14,14,34,34,32,6,29,35,2,16,29,16,36,9,20,15,14,9,16,34,0,36,8,17,3,24,21,15,32,24,21,8,26,19,23,22,32,26,12,27,21,7,22,4,9,11,33,23,35,24,7,6,8,31,2,24,35,27,2,36,11,33,25,25,36,16,5,12,6,28,35,9,34,9,30,5,32,27,32,18,32,7,10,27,35,31,27,6,11,18,4,2,15,0,5,6,7,36,11,18,36,23,20,17,6,1,15,14,0,15,8,30,34,22,11,9,21,27,17,5,15,36,34,19,16,22,13,30,0,5,5,27,0,31,5,12,32,19,30,1,14,1,23,28,11,4,6,0,21,6,22,9,0,3,26,33,6,17,15,3,28,2,33,0,7,14,11,24,13,36,31,19,0,4,32,21,9,10,21,34,36,23,35,13,34,4,27,8,31,16,29,15,6,0,11,13,18,35,18,30,22,18,12,32,28,1,3,4,28,10,27,20,0,28,20,20,32,20,30,33,33,21,13,8,4,0,23,35,25,30,21,25,13,0,36,6,4,3,3,24,31,2,15,25,12,28,21,19,34,23,23,31,0,23,5,17,22,29,13,1,24,6,18,16,22,
+        // Создаем частицы для фона
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.width = particle.style.height = Math.random() * 5 + 2 + 'px';
+            particle.style.background = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.5)`;
+            particle.style.borderRadius = '50%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = 8 + Math.random() * 4 + 's';
+            document.body.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 12000);
+        }
+
+        // Создаем частицы периодически
+        setInterval(createParticle, 300);
+
+        // Применяем эффекты к кнопкам после их создания
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                const numberButtons = document.querySelectorAll('.numberButton0');
+                
+                numberButtons.forEach(button => {
+                    const key = parseInt(button.dataset.key || button.textContent);
+                    
+                    // Добавляем эффект выбора
+                    button.addEventListener('click', function() {
+                        this.classList.add('selected');
+                        setTimeout(() => {
+                            this.classList.remove('selected');
+                        }, 400);
+                        
+                        // Вибрация на мобильных устройствах
+                        if (navigator.vibrate) {
+                            navigator.vibrate(50);
+                        }
+                        
+                        // Создаем визуальный эффект при клике
+                        const ripple = document.createElement('div');
+                        ripple.style.position = 'absolute';
+                        ripple.style.width = ripple.style.height = '100%';
+                        ripple.style.background = 'radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 70%)';
+                        ripple.style.borderRadius = '50%';
+                        ripple.style.transform = 'scale(0)';
+                        ripple.style.opacity = '1';
+                        ripple.style.transition = 'transform 0.5s, opacity 0.5s';
+                        ripple.style.pointerEvents = 'none';
+                        
+                        this.style.position = 'relative';
+                        this.appendChild(ripple);
+                        
+                        setTimeout(() => {
+                            ripple.style.transform = 'scale(2)';
+                            ripple.style.opacity = '0';
+                        }, 10);
+                        
+                        setTimeout(() => ripple.remove(), 500);
+                    });
+                });
+            }, 100);
+        });
+    </script>
+</body>
+
+</html>
