@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тактика</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f0f;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Анимированный фон */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 50, 200, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 50, 120, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(50, 120, 255, 0.2) 0%, transparent 50%);
+            animation: backgroundFloat 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        @keyframes backgroundFloat {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(-30px, -50px) scale(1.1);
+            }
+            66% {
+                transform: translate(30px, 20px) scale(0.9);
+            }
+        }
+
+        /* Сетка */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container_button {
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 32px;
+            padding: 40px 32px;
+            box-shadow: 
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                0 10px 40px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            animation: containerEntry 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+        }
+
+        /* Глянцевый эффект */
+        .container_button::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.05) 50%,
+                transparent 70%
+            );
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translate(-100%, -100%) rotate(45deg);
+            }
+            100% {
+                transform: translate(100%, 100%) rotate(45deg);
+            }
+        }
+
+        @keyframes containerEntry {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .tactic-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, #f97316, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            letter-spacing: -0.5px;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% {
+                filter: brightness(1);
+            }
+            50% {
+                filter: brightness(1.2);
+            }
+        }
+
+        .result-text {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 32px;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(236, 72, 153, 0.1));
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-text::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .result-text:hover::before {
+            transform: translateX(100%);
+        }
+
+        .numbers-grid {
+            margin-bottom: 32px;
+        }
+
+        .grid-main {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .grid-special {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .grid-special .numberButton0 {
+            width: 70px;
+            height: 48px;
+            aspect-ratio: unset;
+        }
+
+        .numberButton0 {
+            aspect-ratio: 1;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            transform: translateY(0);
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Красные номера с градиентом */
+        .numberButton0[data-key="1"],
+        .numberButton0[data-key="3"],
+        .numberButton0[data-key="5"],
+        .numberButton0[data-key="7"],
+        .numberButton0[data-key="9"],
+        .numberButton0[data-key="12"],
+        .numberButton0[data-key="14"],
+        .numberButton0[data-key="16"],
+        .numberButton0[data-key="18"],
+        .numberButton0[data-key="19"],
+        .numberButton0[data-key="21"],
+        .numberButton0[data-key="23"],
+        .numberButton0[data-key="25"],
+        .numberButton0[data-key="27"],
+        .numberButton0[data-key="30"],
+        .numberButton0[data-key="32"],
+        .numberButton0[data-key="34"],
+        .numberButton0[data-key="36"] {
+            background: linear-gradient(135deg, #ff0844, #c7003d);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .numberButton0[data-key="1"]:hover,
+        .numberButton0[data-key="3"]:hover,
+        .numberButton0[data-key="5"]:hover,
+        .numberButton0[data-key="7"]:hover,
+        .numberButton0[data-key="9"]:hover,
+        .numberButton0[data-key="12"]:hover,
+        .numberButton0[data-key="14"]:hover,
+        .numberButton0[data-key="16"]:hover,
+        .numberButton0[data-key="18"]:hover,
+        .numberButton0[data-key="19"]:hover,
+        .numberButton0[data-key="21"]:hover,
+        .numberButton0[data-key="23"]:hover,
+        .numberButton0[data-key="25"]:hover,
+        .numberButton0[data-key="27"]:hover,
+        .numberButton0[data-key="30"]:hover,
+        .numberButton0[data-key="32"]:hover,
+        .numberButton0[data-key="34"]:hover,
+        .numberButton0[data-key="36"]:hover {
+            background: linear-gradient(135deg, #ff3366, #ff0844);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 
+                0 8px 20px rgba(255, 8, 68, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        /* Черные номера с градиентом */
+        .numberButton0[data-key="2"],
+        .numberButton0[data-key="4"],
+        .numberButton0[data-key="6"],
+        .numberButton0[data-key="8"],
+        .numberButton0[data-key="10"],
+        .numberButton0[data-key="11"],
+        .numberButton0[data-key="13"],
+        .numberButton0[data-key="15"],
+        .numberButton0[data-key="17"],
+        .numberButton0[data-key="20"],
+        .numberButton0[data-key="22"],
+        .numberButton0[data-key="24"],
+        .numberButton0[data-key="26"],
+        .numberButton0[data-key="28"],
+        .numberButton0[data-key="29"],
+        .numberButton0[data-key="31"],
+        .numberButton0[data-key="33"],
+        .numberButton0[data-key="35"] {
+            background: linear-gradient(135deg, #2a2a2a, #0a0a0a);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .numberButton0[data-key="2"]:hover,
+        .numberButton0[data-key="4"]:hover,
+        .numberButton0[data-key="6"]:hover,
+        .numberButton0[data-key="8"]:hover,
+        .numberButton0[data-key="10"]:hover,
+        .numberButton0[data-key="11"]:hover,
+        .numberButton0[data-key="13"]:hover,
+        .numberButton0[data-key="15"]:hover,
+        .numberButton0[data-key="17"]:hover,
+        .numberButton0[data-key="20"]:hover,
+        .numberButton0[data-key="22"]:hover,
+        .numberButton0[data-key="24"]:hover,
+        .numberButton0[data-key="26"]:hover,
+        .numberButton0[data-key="28"]:hover,
+        .numberButton0[data-key="29"]:hover,
+        .numberButton0[data-key="31"]:hover,
+        .numberButton0[data-key="33"]:hover,
+        .numberButton0[data-key="35"]:hover {
+            background: linear-gradient(135deg, #3a3a3a, #1a1a1a);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* Зеленые номера с градиентом */
+        .numberButton0[data-key="0"],
+        .numberButton0[data-key="00"] {
+            background: linear-gradient(135deg, #00d26a, #00a854);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .numberButton0[data-key="0"]:hover,
+        .numberButton0[data-key="00"]:hover {
+            background: linear-gradient(135deg, #00ff88, #00d26a);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 
+                0 8px 20px rgba(0, 210, 106, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .numberButton0:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        /* Эффект пульсации при выборе */
+        .numberButton0.selected {
+            animation: selectedPulse 0.4s ease-out;
+        }
+
+        @keyframes selectedPulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+            }
+        }
+
+        .button {
+            width: 100%;
+            padding: 18px 28px;
+            border: none;
+            border-radius: 20px;
+            font-size: 17px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #f97316, #ec4899);
+            box-shadow: 
+                0 4px 20px rgba(249, 115, 22, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateY(0);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 8px 30px rgba(249, 115, 22, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #fb923c, #f472b6);
+        }
+
+        .button:active {
+            transform: translateY(0);
+            box-shadow: 
+                0 2px 10px rgba(249, 115, 22, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        /* Световой эффект на кнопке */
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .button:hover::before {
+            left: 100%;
+        }
+
+        /* Индикатор активности */
+        .blick {
+            position: absolute;
+            top: 50%;
+            right: 24px;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            animation: blickPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes blickPulse {
+            0%, 100% {
+                opacity: 0.8;
+                transform: translateY(-50%) scale(1);
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-50%) scale(1.3);
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        /* Анимация появления элементов */
+        .container_button > * {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideInUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .container_button > *:nth-child(1) { animation-delay: 0.1s; }
+        .container_button > *:nth-child(2) { animation-delay: 0.2s; }
+        .container_button > *:nth-child(3) { animation-delay: 0.3s; }
+        .container_button > *:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes slideInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Мобильная адаптация */
+        @media (max-width: 480px) {
+            .container_button {
+                padding: 28px 20px;
+                border-radius: 24px;
+            }
+            
+            .tactic-title {
+                font-size: 24px;
+                margin-bottom: 24px;
+            }
+            
+            .result-text {
+                font-size: 16px;
+                padding: 16px 20px;
+                margin-bottom: 24px;
+            }
+            
+            .grid-main {
+                gap: 8px;
+            }
+            
+            .grid-special {
+                gap: 8px;
+            }
+            
+            .numberButton0 {
+                font-size: 16px;
+                border-radius: 12px;
+            }
+            
+            .button {
+                padding: 16px 24px;
+                font-size: 16px;
+                border-radius: 16px;
+            }
+        }
+
+        /* Дополнительная адаптация для очень маленьких экранов */
+        @media (max-width: 360px) {
+            .container_button {
+                padding: 24px 16px;
+            }
+            
+            .tactic-title {
+                font-size: 20px;
+            }
+            
+            .result-text {
+                font-size: 14px;
+                padding: 14px 16px;
+            }
+            
+            .numberButton0 {
+                font-size: 14px;
+                border-radius: 10px;
+            }
+            
+            .grid-special .numberButton0 {
+                width: 60px;
+                height: 40px;
+            }
+        }
+
+        /* Добавляем небольшие частицы для красоты */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            opacity: 0;
+            animation: particleFloat 8s linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container_button">
+        <h1 id="tacticName" class="tactic-title"></h1>
+        <div id="resultDisplay" class="result-text"></div>
+        <div class="numbers-grid">
+            <div class="grid-main">
+            </div>
+            <div class="grid-special">
+                <button class="numberButton0" data-key="0">0</button>
+                <button class="numberButton0" data-key="00">00</button>
+            </div>
+        </div>
+        <button class="button back-button" onclick="window.location.href='start.html'">
+            Выбрать другую тактику
+            <span class="blick"></span>
+        </button>
+    </div>
+
+    <script src="assets/js/tactik.js"></script>
+    <script>
+        // Создаем частицы для фона
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.width = particle.style.height = Math.random() * 5 + 2 + 'px';
+            particle.style.background = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.5)`;
+            particle.style.borderRadius = '50%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = 8 + Math.random() * 4 + 's';
+            document.body.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 12000);
+        }
+
+        // Создаем частицы периодически
+        setInterval(createParticle, 300);
+
+        // Применяем эффекты к кнопкам после их создания
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                const numberButtons = document.querySelectorAll('.numberButton0');
+                
+                numberButtons.forEach(button => {
+                    const key = parseInt(button.dataset.key || button.textContent);
+                    
+                    // Добавляем эффект выбора
+                    button.addEventListener('click', function() {
+                        this.classList.add('selected');
+                        setTimeout(() => {
+                            this.classList.remove('selected');
+                        }, 400);
+                        
+                        // Вибрация на мобильных устройствах
+                        if (navigator.vibrate) {
+                            navigator.vibrate(50);
+                        }
+                        
+                        // Создаем визуальный эффект при клике
+                        const ripple = document.createElement('div');
+                        ripple.style.position = 'absolute';
+                        ripple.style.width = ripple.style.height = '100%';
+                        ripple.style.background = 'radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 70%)';
+                        ripple.style.borderRadius = '50%';
+                        ripple.style.transform = 'scale(0)';
+                        ripple.style.opacity = '1';
+                        ripple.style.transition = 'transform 0.5s, opacity 0.5s';
+                        ripple.style.pointerEvents = 'none';
+                        
+                        this.style.position = 'relative';
+                        this.appendChild(ripple);
+                        
+                        setTimeout(() => {
+                            ripple.style.transform = 'scale(2)';
+                            ripple.style.opacity = '0';
+                        }, 10);
+                        
+                        setTimeout(() => ripple.remove(), 500);
+                    });
+                });
+            }, 100);
+        });
+    </script>
+</body>
+
+</html>

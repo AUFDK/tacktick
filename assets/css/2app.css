@@ -1,0 +1,223 @@
+﻿:root {
+    --bg-color: #f4f4f4;
+    --text-color: #000000;
+    --hint-color: #666;
+    --button-color: #5d7c9d;
+    --button-text-color: #ffffff;
+    --button-hover-color: #0056b3;
+    --container-bg-color: #ffffff;
+    --info-block-bg-color: #eef;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.container_button {
+    background-color: var(--container-bg-color);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+.text_center {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 25px;
+    margin-bottom: 50px;
+}
+.button {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    margin: 10px 0;
+    font-size: 16px;
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: relative; 
+    overflow-x: hidden;
+}
+
+.button .blick {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 45px;
+    transform: skewX(-45deg); 
+    animation: blickAnimation;
+    left: -150%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.4));
+    animation: blickAnimation 3s infinite linear;
+}
+
+@keyframes blickAnimation {
+    0% {
+        left: -150%;
+    }
+
+    100% {
+        left: 150%;
+    }
+}
+.result {
+    margin-top: 20px;
+    font-size: 18px;
+    color: var(--text-color);
+}
+.numbers-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.grid-main {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(50px, 1fr));
+    gap: 8px;
+    margin-bottom: 0px;
+}
+
+.grid-special {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.numberButton {
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 50px;
+    position: relative;
+    overflow: hidden;
+}
+
+.numberButton:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.numberButton::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    height: 100%;
+    width: 45px;
+    transform: skewX(-45deg);
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.4));
+    opacity: 0;
+}
+
+.numberButton:hover::before {
+    opacity: 1;
+    animation: blickAnimation 1.4s infinite linear;
+}
+.numberButton0 {
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: 600;
+    background-color: #1d5a53;
+    color: var(--button-text-color);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 50px;
+    position: relative;
+    overflow: hidden;
+}
+
+.numberButton0:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.numberButton0::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    height: 100%;
+    width: 45px;
+    transform: skewX(-45deg);
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.4));
+    opacity: 0;
+}
+.numberButton0:hover::before {
+    opacity: 1;
+    animation: blickAnimation 1.4s infinite linear;
+}
+@keyframes blickAnimation {
+    0% {
+        left: -150%;
+    }
+
+    100% {
+        left: 150%;
+    }
+}
+.tactic-title {
+    color: var(--text-color);
+    font-size: 20px;
+    margin-bottom: 25px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.result-text {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-color);
+    text-align: center;
+    margin: 25px 0;
+    padding: 15px;
+    background-color: var(--info-block-bg-color);
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.back-button {
+    margin-top: 15px;
+    background-color: var(--hint-color);
+}
+.probability-grid {
+    display: grid;
+    gap: 12px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.probability-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 8px;
+    background: var(--info-block-bg-color);
+    border-radius: 8px;
+}
+
+.number {
+    font-weight: 700;
+    min-width: 30px;
+    text-align: center;
+}

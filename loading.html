@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проверка доступа</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="assets/js/loading.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.4/lottie.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Анимированный градиентный фон */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(120, 219, 255, 0.2) 0%, transparent 70%);
+            animation: rotateGradient 20s linear infinite;
+            z-index: -2;
+        }
+
+        @keyframes rotateGradient {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Сетка на фоне */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 480px;
+        }
+
+        /* Lottie анимация */
+        .lottie-animation {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px;
+            filter: drop-shadow(0 0 30px rgba(120, 119, 198, 0.5));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Сообщение о статусе */
+        .status-message {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeIn 0.6s ease-out;
+            letter-spacing: -0.5px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Спиннер */
+        .spinner {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto;
+            position: relative;
+            animation: fadeIn 0.6s ease-out 0.2s both;
+        }
+
+        .spinner::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: #667eea;
+            border-right-color: #764ba2;
+            animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        }
+
+        .spinner::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-bottom-color: #ec4899;
+            border-left-color: #f97316;
+            animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite reverse;
+            opacity: 0.6;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Контейнер каналов */
+        .channels-container {
+            background: rgba(20, 20, 20, 0.8);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 24px;
+            padding: 32px 24px;
+            margin-top: 30px;
+            box-shadow: 
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                0 10px 40px rgba(0, 0, 0, 0.4);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .channels-container.hidden {
+            opacity: 0;
+            transform: scale(0.9);
+            display: none;
+        }
+
+        /* Список каналов */
+        .channels-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        /* Элемент канала */
+        .channel-item {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .channel-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .channel-item:hover::before {
+            left: 100%;
+        }
+
+        .channel-item:hover {
+            transform: translateX(5px);
+            border-color: rgba(102, 126, 234, 0.3);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .channel-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .channel-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .channel-details {
+            text-align: left;
+        }
+
+        .channel-name {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .channel-subscribers {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        .channel-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .status-icon.subscribed {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .status-icon.not-subscribed {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .subscribe-link {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .subscribe-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #7c8ff0, #8a5fb8);
+        }
+
+        /* Кнопка проверки */
+        .check-button {
+            width: 100%;
+            padding: 18px 32px;
+            background: linear-gradient(135deg, #f97316, #ec4899);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 20px rgba(249, 115, 22, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 24px;
+        }
+
+        .check-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 30px rgba(249, 115, 22, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, #fb923c, #f472b6);
+        }
+
+        .check-button:active {
+            transform: translateY(0);
+        }
+
+        .check-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .check-button:hover::before {
+            left: 100%;
+        }
+
+        .check-button.hidden {
+            display: none;
+        }
+
+        /* Эффект пульсации */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 20px rgba(102, 126, 234, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+            }
+        }
+
+        /* Частицы на фоне */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            opacity: 0;
+            animation: particleAnimation 10s linear infinite;
+        }
+
+        @keyframes particleAnimation {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) scale(1);
+            }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 16px;
+            }
+
+            .lottie-animation {
+                width: 160px;
+                height: 160px;
+            }
+
+            .status-message {
+                font-size: 18px;
+            }
+
+            .channels-container {
+                padding: 24px 16px;
+            }
+
+            .channel-item {
+                padding: 16px;
+            }
+
+            .channel-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .channel-name {
+                font-size: 15px;
+            }
+
+            .check-button {
+                font-size: 16px;
+                padding: 16px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="lottie-container" class="lottie-animation"></div>
+        <div id="message" class="status-message">Пожалуйста, подождите...</div>
+        <div id="spinner" class="spinner"></div>
+
+        <div id="channelPrompt" class="channels-container hidden">
+            <div id="channelsList" class="channels-list"></div>
+        </div>
+        <button id="checkSubscriptionBtn" class="check-button hidden">Проверить подписку</button>
+    </div>
+
+    <script>
+        // Создаем анимированные частицы
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.width = particle.style.height = Math.random() * 4 + 2 + 'px';
+            particle.style.background = `rgba(${120 + Math.random() * 135}, ${119 + Math.random() * 136}, ${198 + Math.random() * 57}, 0.6)`;
+            particle.style.borderRadius = '50%';
+            particle.style.animationDelay = Math.random() * 10 + 's';
+            particle.style.animationDuration = 10 + Math.random() * 5 + 's';
+            particle.style.boxShadow = `0 0 ${Math.random() * 10 + 5}px currentColor`;
+            document.body.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 15000);
+        }
+
+        // Создаем частицы периодически
+        setInterval(createParticle, 500);
+
+        // Добавляем визуальные эффекты для динамически создаваемых элементов
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.addedNodes.length) {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.classList && node.classList.contains('channel-item')) {
+                            // Анимация появления канала
+                            node.style.opacity = '0';
+                            node.style.transform = 'translateX(-20px)';
+                            setTimeout(() => {
+                                node.style.transition = 'all 0.5s ease';
+                                node.style.opacity = '1';
+                                node.style.transform = 'translateX(0)';
+                            }, 100);
+                        }
+                    });
+                }
+            });
+        });
+
+        // Наблюдаем за изменениями в списке каналов
+        const channelsList = document.getElementById('channelsList');
+        if (channelsList) {
+            observer.observe(channelsList, { childList: true });
+        }
+    </script>
+</body>
+
+</html>
